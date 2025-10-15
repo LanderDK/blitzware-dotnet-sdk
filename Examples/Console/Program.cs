@@ -105,10 +105,17 @@ namespace BlitzWare.SDK.Examples.Console
                 var authRequest = await _auth!.StartLoginAsync();
 
                 // Extract the port from the redirect URI
-                var redirectUri = new Uri(authRequest.AuthorizationUrl.Contains("redirect_uri=")
-                    ? Uri.UnescapeDataString(authRequest.AuthorizationUrl.Split("redirect_uri=")[1].Split('&')[0])
-                    : "http://localhost:8080/callback");
-
+                var redirectUriStr = "http://localhost:8080/callback";
+                if (authRequest.AuthorizationUrl.Contains("redirect_uri="))
+                {
+                    var parts = authRequest.AuthorizationUrl.Split(new[] { "redirect_uri=" }, StringSplitOptions.None);
+                    if (parts.Length > 1)
+                    {
+                        var uriPart = parts[1].Split(new[] { '&' })[0];
+                        redirectUriStr = Uri.UnescapeDataString(uriPart);
+                    }
+                }
+                var redirectUri = new Uri(redirectUriStr);
                 var port = redirectUri.Port;
 
                 System.Console.WriteLine($"Starting local server on port {port}...");
@@ -326,7 +333,7 @@ namespace BlitzWare.SDK.Examples.Console
                 if (token != null)
                 {
                     System.Console.WriteLine("🔑 Access Token:");
-                    System.Console.WriteLine($"   {token[..Math.Min(20, token.Length)]}... (truncated for security)");
+                    System.Console.WriteLine($"   {token.Substring(0, Math.Min(20, token.Length))}... (truncated for security)");
                     System.Console.WriteLine($"   Length: {token.Length} characters");
                 }
                 else

@@ -125,12 +125,18 @@ namespace BlitzWare.SDK.Models
                 if (string.IsNullOrWhiteSpace(name)) return "?";
                 
                 var parts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                return parts.Length switch
+                if (parts.Length >= 2)
                 {
-                    >= 2 => $"{parts[0][0]}{parts[^1][0]}".ToUpper(),
-                    1 => parts[0][0].ToString().ToUpper(),
-                    _ => "?"
-                };
+                    return $"{parts[0][0]}{parts[parts.Length - 1][0]}".ToUpper();
+                }
+                else if (parts.Length == 1)
+                {
+                    return parts[0][0].ToString().ToUpper();
+                }
+                else
+                {
+                    return "?";
+                }
             }
         }
     }
