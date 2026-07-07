@@ -179,7 +179,8 @@ namespace BlitzWare.SDK
                 {
                     ClientId = _config.ClientId,
                     RedirectUri = _config.RedirectUri,
-                    ResponseType = _config.ResponseType
+                    ResponseType = _config.ResponseType,
+                    AuthBaseUrl = _config.AuthBaseUrl
                 };
 
                 // Build authorization URL

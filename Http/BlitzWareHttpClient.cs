@@ -213,7 +213,7 @@ namespace BlitzWare.SDK.Http
 
             try
             {
-                var revokeUrl = "https://auth.blitzware.xyz/api/auth/revoke";
+                var revokeUrl = new Uri(new Uri(_config.NormalizedAuthBaseUrl), "revoke").ToString();
 
 #if NET6_0_OR_GREATER
                 _logger?.LogDebug("Revoking token at {Url}", revokeUrl);
@@ -457,7 +457,7 @@ namespace BlitzWare.SDK.Http
         {
             try
             {
-                var healthUrl = "https://auth.blitzware.xyz/api/auth/.well-known/openid_configuration";
+                var healthUrl = new Uri(new Uri(_config.NormalizedAuthBaseUrl), ".well-known/openid_configuration").ToString();
                 using var response = await _httpClient.GetAsync(healthUrl, cancellationToken);
                 return response.IsSuccessStatusCode;
             }
@@ -476,7 +476,7 @@ namespace BlitzWare.SDK.Http
         {
             try
             {
-                var configUrl = "https://auth.blitzware.xyz/api/auth/.well-known/openid_configuration";
+                var configUrl = new Uri(new Uri(_config.NormalizedAuthBaseUrl), ".well-known/openid_configuration").ToString();
                 using var response = await _httpClient.GetAsync(configUrl, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
@@ -505,7 +505,7 @@ namespace BlitzWare.SDK.Http
 
             try
             {
-                var introspectUrl = "https://auth.blitzware.xyz/api/auth/introspect";
+                var introspectUrl = new Uri(new Uri(_config.NormalizedAuthBaseUrl), "introspect").ToString();
 
 #if NET6_0_OR_GREATER
                 _logger?.LogDebug("Introspecting token at {Url}", introspectUrl);

@@ -10,7 +10,7 @@
     
     <!-- Package Information -->
     <PackageId>BlitzWare.SDK</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Title>BlitzWare .NET SDK</Title>
     <Description>Universal .NET SDK for BlitzWare authentication and authorization. Works with Console, WinForms, WPF, UWP, MAUI, ASP.NET, Unity and all .NET platforms.</Description>
     <Authors>BlitzWare Team</Authors>

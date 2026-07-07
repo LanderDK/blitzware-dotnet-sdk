@@ -147,6 +147,11 @@ namespace BlitzWare.SDK.Models
     public class BlitzWareConfig
     {
         /// <summary>
+        /// Default BlitzWare Auth API base URL.
+        /// </summary>
+        public const string DefaultAuthBaseUrl = "https://auth.blitzware.xyz/api/auth/";
+
+        /// <summary>
         /// Your BlitzWare client ID
         /// </summary>
         [Required]
@@ -184,28 +189,58 @@ namespace BlitzWare.SDK.Models
         public bool EnableLogging { get; set; } = false;
 
         /// <summary>
+        /// Optional BlitzWare Auth API base URL. Defaults to https://auth.blitzware.xyz/api/auth/
+        /// </summary>
+        public string AuthBaseUrl { get; set; } = DefaultAuthBaseUrl;
+
+        /// <summary>
+        /// Normalized auth API base URL with a trailing slash.
+        /// </summary>
+        [JsonIgnore]
+        public string NormalizedAuthBaseUrl
+        {
+            get
+            {
+                var value = string.IsNullOrWhiteSpace(AuthBaseUrl) ? DefaultAuthBaseUrl : AuthBaseUrl.Trim();
+                if (!Uri.TryCreate(value, UriKind.Absolute, out var uri))
+                    return DefaultAuthBaseUrl;
+
+                var builder = new UriBuilder(uri)
+                {
+                    Query = string.Empty,
+                    Fragment = string.Empty,
+                    Path = uri.AbsolutePath.TrimEnd('/') + "/"
+                };
+                return builder.Uri.ToString();
+            }
+        }
+
+        private string AuthEndpoint(string path) =>
+            new Uri(new Uri(NormalizedAuthBaseUrl), path.TrimStart('/')).ToString();
+
+        /// <summary>
         /// Get the authorization URL for the OAuth flow
         /// </summary>
         [JsonIgnore]
-        public string AuthorizationUrl => "https://auth.blitzware.xyz/api/auth/authorize";
+        public string AuthorizationUrl => AuthEndpoint("authorize");
 
         /// <summary>
         /// Get the token exchange URL
         /// </summary>
         [JsonIgnore]
-        public string TokenUrl => "https://auth.blitzware.xyz/api/auth/token";
+        public string TokenUrl => AuthEndpoint("token");
 
         /// <summary>
         /// Get the user info URL
         /// </summary>
         [JsonIgnore]
-        public string UserInfoUrl => "https://auth.blitzware.xyz/api/auth/userinfo";
+        public string UserInfoUrl => AuthEndpoint("userinfo");
 
         /// <summary>
         /// Get the logout URL
         /// </summary>
         [JsonIgnore]
-        public string LogoutUrl => "https://auth.blitzware.xyz/api/auth/logout";
+        public string LogoutUrl => AuthEndpoint("logout");
 
         /// <summary>
         /// Validate the configuration
@@ -226,6 +261,9 @@ namespace BlitzWare.SDK.Models
 
             if (ResponseType != "code" && ResponseType != "token")
                 errors.Add("Response type must be 'code' or 'token'");
+
+            if (!Uri.TryCreate(AuthBaseUrl, UriKind.Absolute, out _))
+                errors.Add("Auth base URL must be a valid absolute URI");
 
             return new ValidationResult(errors);
         }

@@ -35,6 +35,7 @@ namespace BlitzWare.SDK.Examples.Console
                 {
                     ClientId = GetConfigValue("BLITZWARE_CLIENT_ID", "2f465572-9a90-4bd1-b4ec-3b03b33fbb66"),
                     RedirectUri = GetConfigValue("BLITZWARE_REDIRECT_URI", "http://localhost:8080/callback"),
+                    AuthBaseUrl = GetConfigValue("BLITZWARE_AUTH_BASE_URL", BlitzWareConfig.DefaultAuthBaseUrl),
                     ResponseType = "code",
                     EnableLogging = true
                 };
