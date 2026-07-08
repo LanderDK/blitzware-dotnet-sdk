@@ -287,7 +287,7 @@ namespace BlitzWare.SDK.Models
 
     /// <summary>
     /// OAuth token response
-    /// Note: ID tokens are not supported by BlitzWare OAuth 2.0 service
+    /// OAuth 2.0 token response. ID tokens are returned only when openid was requested.
     /// </summary>
     public class TokenResponse
     {
@@ -295,7 +295,7 @@ namespace BlitzWare.SDK.Models
         public string AccessToken { get; set; } = string.Empty;
 
         /// <summary>
-        /// Note: ID tokens are not currently supported by BlitzWare OAuth 2.0 service
+        /// OpenID Connect ID token, returned only when openid scope was requested.
         /// </summary>
         [JsonPropertyName("id_token")]
         public string? IdToken { get; set; }
